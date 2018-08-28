@@ -14,3 +14,7 @@ class Main : Application() {
         primaryStage.show()
     }
 }
+
+fun main(args: Array<String>) {
+    Application.launch(Main::class.java)
+}

@@ -1,0 +1,59 @@
+buildscript {
+    ext.kotlin_version = '1.2.61'
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+group = "xyz.abhinay"
+version = "1.0-SNAPSHOT"
+
+ext.moduleName = "$group"
+
+apply plugin: 'kotlin'
+apply plugin: 'application'
+
+sourceCompatibility = 1.10
+targetCompatibility = 1.10
+
+repositories {
+    jcenter()
+}
+
+// Add Kotlin stdlib
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+
+// Compiles the Java classes within Kotlin compiled output dir
+// Helps module-info.java and kt files to compile in the same output dir
+compileJava.destinationDir = compileKotlin.destinationDir
+
+// Assign classpath to module-path 
+compileJava {
+    inputs.property("moduleName", moduleName)
+    dependsOn("compileKotlin")
+    doFirst {
+        options.compilerArgs = [
+            "--module-path", classpath.asPath
+        ]
+        classpath = files()
+    }
+}
+
+run {
+    inputs.property("moduleName", moduleName)
+    doFirst {
+        jvmArgs = [
+                "--module-path", classpath.asPath,
+                "--module", mainClassName
+        ]
+        classpath = files()
+    }
+}
+
+mainClassName = "$moduleName/xyz.abhinay.Main"
