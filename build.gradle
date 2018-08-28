@@ -45,6 +45,7 @@ compileJava {
     }
 }
 
+// Run using module path
 run {
     inputs.property("moduleName", moduleName)
     doFirst {
@@ -56,4 +57,5 @@ run {
     }
 }
 
+// Main class should be referenced by module/class format
 mainClassName = "$moduleName/xyz.abhinay.Main"
